@@ -1,6 +1,7 @@
 #pragma once
 #include "Device.hpp"
 #include <vector>
+#include <algorithm>
 #include <memory>
 
 namespace os {
@@ -20,7 +21,12 @@ namespace os {
             /**
              * @brief Operator for adding devices to room.
              */
-            Room& operator+(Device* newDevice);
+            Room& operator+=(Device* newDevice);
+
+            /**
+             * @brief Operator for removing devices to room.
+             */
+            Room& operator-=(Device* newDevice);
 
             /**
              * @brief Turn off all devices in room

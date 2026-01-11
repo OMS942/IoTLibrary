@@ -7,10 +7,26 @@ namespace os {
         for (auto d : devices) delete d;
     }
 
-    Room& Room::operator+(Device* newDevice) {
+    Room& Room::operator+=(Device* newDevice) {
         if (newDevice != nullptr) {
             devices.push_back(newDevice);
         }
+        return *this;
+    }
+
+    Room& Room::operator-=(Device* deviceToRemove) {
+        if (deviceToRemove == nullptr) {
+            throw std::invalid_argument("Attempting to remove non-existing device (nullptr)!");
+        }
+
+        auto it = std::find(devices.begin(), devices.end(), deviceToRemove);
+
+        if (it != devices.end()) {
+            devices.erase(it);
+        } else {
+            throw std::runtime_error("Error: Device '" + deviceToRemove->getDeviceInfo() + "' is not in this room!");
+        }
+
         return *this;
     }
 
@@ -21,7 +37,7 @@ namespace os {
     }
 
     std::string Room::showStatus() const {
-        std::string report = "Status pokoju: " + roomName + "\n";
+        std::string report = "Room status: " + roomName + "\n";
         for (auto d : devices) {
            report += d->getDeviceInfo() + "\n";
         }

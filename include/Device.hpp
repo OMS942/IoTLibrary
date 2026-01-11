@@ -6,7 +6,7 @@
 namespace os {
 
     /**
-     * @brief Class representing genergic IoT device.
+     * @brief Class representing generic IoT device.
      */
     class Device {
         protected:
@@ -16,7 +16,7 @@ namespace os {
 
         public:
             /**
-             * Default constructor
+             * @brief Default constructor
              */
             Device();
 
@@ -24,6 +24,7 @@ namespace os {
              * @brief Parametric constructor
              * @param id uniqe device id
              * @param name device name
+             * @throw std::invalid_argument if id < 0
              */
             Device(int id, std::string name);
 
@@ -33,30 +34,31 @@ namespace os {
             virtual ~Device() = default;
 
             /**
-             * @brief Id getter
+             * @brief Returns device ID
              */
-            int getId() const {
-                return id;
-            }
+            int getId() const;
+
+            /**
+             * @brief Returns device name
+             */
+            const std::string getName() const;
             
             /**
-             * @brief Status getter
+             * @brief Returns device status
              */
-            bool getStatus() const {
-                return status;
-            }
+            bool getStatus() const;
 
             /**
              * @brief Sets device status
-             * @return true if success
              */
-            bool setStatus(bool newStatus);
+            void setStatus(bool newStatus);
 
-            virtual std::string getDeviceInfo() const;
+            virtual std::string getDeviceInfo() const = 0;
 
-            bool operator==(const Device& other) const {
-                return this->id == other.id;
-            }
+            /**
+             * @brief Seting compare operator
+             */
+            bool operator==(const Device& other) const;
 
     };
 

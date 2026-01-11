@@ -3,15 +3,27 @@
 namespace os {
     Device::Device() : id(0), name("Unknown"), status(false) {}
 
-    Device::Device(int id, std::string name) : id(id), name(name), status(false) {
+    Device::Device(int id, std::string name) : Device() {
         if (id < 0) {
             throw std::invalid_argument("ID can't be negative!");
         }
+        this->id = id;
+        this->name = name;
+    }
+    int Device::getId() const {
+        return id;
     }
 
-    bool Device::setStatus(bool newStatus) {
+    const std::string Device::getName() const {
+        return name;
+    }
+
+    void Device::setStatus(bool newStatus) {
         status = newStatus;
-        return true;
+    }
+
+    bool Device::operator==(const Device& other) const {
+        return this->id == other.id;
     }
 
     std::string Device::getDeviceInfo() const {
