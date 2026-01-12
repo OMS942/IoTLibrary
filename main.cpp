@@ -5,73 +5,58 @@
 
 #include <iostream>
 #include <vector>
+#include <chrono>
+#include <thread>
 #include "Device.hpp"
 #include "Sensor.hpp"
 #include "Light.hpp"
 #include "Room.hpp"
+#include "HumiditySensor.hpp"
+#include "Termometer.hpp"
+#include "Environment.hpp"
+#include "HeaterActuator.hpp"
 
 int main() {
-    // 1. Tworzenie kontenera (Pokoju)
-    os::Room salon("Salon Glowny");
+    using namespace os;
 
-    // 2. Tworzenie urządzeń (Dynamiczna alokacja dla polimorfizmu)
-    // Wykorzystujemy różne konstruktory (wymaganie projektu)
-    os::Light* lampaLustro = new os::Light(101, "Lampa Lustro"); // Domyślna jasność
-    os::Light* lampaGlowna = new os::Light(102, "Zyrandol", 75); // Jasność 75%
+    Environment room(20.0f, 18.0f);
+    float dt = 1.0f;
+    float targetTemperature = 22.0f;
 
-    // Użycie szablonu dla sensorów (wymaganie projektu)
-    os::Sensor<float>* termometr = new os::Sensor<float>(201, "Termometr Zewn", -30.0f, 50.0f);
-    os::Sensor<int>* czujnikDymu = new os::Sensor<int>(202, "Czujnik Dymu", 0, 1000);
+    HeaterActuator heater(1, "Main heater");
+    Termometer tempSensor(2, "Room thermometer", "C");
 
-    // 3. Prezentacja operatora + (wymaganie projektu)
-    // Dodajemy urządzenia do pokoju za pomocą przeciążonego operatora
-    salon += lampaLustro;
-    salon += lampaGlowna;
-    salon += termometr;
-    salon += czujnikDymu;
+    std::cout << "Starting simulation...\n";
 
-    std::cout << "--- Inicjalizacja systemu IoT zakończona ---\n" << std::endl;
+    heater.turnOn(80, 10);
 
-    // 4. Prezentacja obsługi wyjątków i walidacji
-    std::cout << "[Test Wyjatkow/Walidacji]" << std::endl;
-    try {
-        std::cout << "Proba ustawienia jasnosci na 150%..." << std::endl;
-        if (!lampaGlowna->setBrightness(150)) {
-            // Jeśli zdecydowałeś się na zwracanie false zamiast rzucania wyjątków:
-            std::cerr << "Blad: Niepoprawna wartosc jasnosci!" << std::endl;
+    auto last = std::chrono::steady_clock::now();
+
+    while (true) {
+        auto now = std::chrono::steady_clock::now();
+        float dt = std::chrono::duration<float>(now - last).count();
+        last = now;
+
+        heater.update(room, dt);
+        room.applyCooling(dt);              
+        
+        tempSensor.read(room);
+
+        if (tempSensor.getValue() > targetTemperature + 0.5f) {
+            heater.turnOff();
+        } else if (tempSensor.getValue() < targetTemperature - 0.5f) {
+            heater.turnOn();
         }
-    } catch (const std::exception& e) {
-        // Jeśli Twoja biblioteka rzuca wyjątki:
-        std::cerr << "Zlapano wyjatek: " << e.what() << std::endl;
+
+        std::cout
+            << "Temp: " << tempSensor.getValue() << " " << tempSensor.getUnit() << " | "
+            << "Heater: " << (heater.getStatus() ? "ON" : "OFF") << " | "
+            << "Power: " << heater.getPower() << "%\n";
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
 
-    // 5. Symulacja działania (Zmiana stanów)
-    termometr->updateValue(22.5f);
-    lampaLustro->turnOn();
-    
-    // 6. Prezentacja polimorfizmu i raportowania (Brak std::cout wewnątrz klas!)
-    // Metoda showStatus() wewnątrz zbiera dane z getDeviceInfo() każdego urządzenia
-    std::cout << "\n[Pelny Raport Systemu]" << std::endl;
-    std::cout << salon.showStatus() << std::endl;
-
-    // 7. Porównywanie urządzeń (Przeciążony operator ==)
-    std::cout << "[Test Operatora ==]" << std::endl;
-    if (*lampaLustro == *lampaGlowna) {
-        std::cout << "Urzadzenia maja to samo ID." << std::endl;
-    } else {
-        std::cout << "Urzadzenia maja rozne ID (Prawidlowo)." << std::endl;
-    }
-
-    // 8. Sprzątanie (Bardzo ważne w EiT!)
-    // Jeśli Twoja klasa Room nie usuwa wskaźników w destruktorze, zrób to tutaj:
-    delete lampaLustro;
-    delete lampaGlowna;
-    delete termometr;
-    delete czujnikDymu;
-
-    std::cout << "\nSystem zostal poprawnie zamkniety." << std::endl;
-
+    std::cout << "Simulation finished.\n";
     return 0;
 }
-
 

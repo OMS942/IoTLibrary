@@ -18,6 +18,10 @@ namespace os {
         return name;
     }
 
+    bool Device::getStatus() const {
+        return status;
+    }
+
     void Device::setStatus(bool newStatus) {
         status = newStatus;
     }

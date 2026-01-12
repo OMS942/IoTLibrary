@@ -9,7 +9,7 @@ namespace os {
      * @brief Class representing generic IoT device.
      */
     class Device {
-        protected:
+        private:
             int id;
             std::string name;
             bool status;

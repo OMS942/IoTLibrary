@@ -1,5 +1,6 @@
 #pragma once
 #include "Device.hpp"
+#include "Environment.hpp"
 
 namespace os {
     /**
@@ -55,7 +56,7 @@ namespace os {
             /**
              * @brief Returns true if read succesfully
              */
-            virtual bool read() = 0;
+            virtual bool read(const Environment& env) = 0;
 
             std::string getDeviceInfo() const override {
                 return Device::getDeviceInfo() + " | Current Value: " + std::to_string(value) + unit;

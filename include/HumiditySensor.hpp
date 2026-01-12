@@ -10,7 +10,7 @@ namespace os {
             /**
              * @brief Reads humitidy
              */
-            bool read() override;
+            bool read(const Environment& env) override;
 
     };
 
