@@ -11,7 +11,6 @@
 #include "Sensor.hpp"
 #include "Light.hpp"
 #include "Room.hpp"
-#include "HumiditySensor.hpp"
 #include "Termometer.hpp"
 #include "Environment.hpp"
 #include "HeaterActuator.hpp"

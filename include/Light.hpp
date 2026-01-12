@@ -16,7 +16,6 @@ namespace os {
              */
             bool setBrightness(int brightness);
 
-            std::string getDeviceInfo() const override;
     };
 
 } // namespace os

@@ -24,7 +24,7 @@ namespace os {
         if (it != devices.end()) {
             devices.erase(it);
         } else {
-            throw std::runtime_error("Error: Device '" + deviceToRemove->getDeviceInfo() + "' is not in this room!");
+            throw std::runtime_error("Error: Device '" + deviceToRemove->getName() + "' is not in this room!");
         }
 
         return *this;
@@ -36,6 +36,8 @@ namespace os {
         }
     }
 
+    /*
+
     std::string Room::showStatus() const {
         std::string report = "Room status: " + roomName + "\n";
         for (auto d : devices) {
@@ -43,5 +45,7 @@ namespace os {
         }
         return report;
     }
+
+    */
 
 } // namespace os

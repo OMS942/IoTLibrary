@@ -19,14 +19,29 @@ namespace os
              */
             virtual void turnOn(int powerLevel = 100, int durationSeconds = 0);
 
+            /**
+             * @brief Turns off device
+             */
             virtual void turnOff();
 
+            /**
+             * @brief Toggles device
+             */
             virtual void toggle();
 
+            /**
+             * @brief Updates devices parameters
+             */
             virtual void update();
 
+            /**
+             * @brief Gets device power
+             */
             virtual int getPower() const;
 
+            /**
+             * @brief Sets device pwoer
+             */
             virtual bool setPower(int powerLevel);
     };
     

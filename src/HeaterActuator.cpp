@@ -17,10 +17,6 @@ namespace os
         Actuator::toggle(); 
     }
 
-    std::string HeaterActuator::getDeviceInfo() const {
-        return Actuator::getDeviceInfo() + " | Power: " + std::to_string(getPower());
-    }
-
     void HeaterActuator::update(Environment& env, float dt) {
         Actuator::update();
         if (getStatus()) {

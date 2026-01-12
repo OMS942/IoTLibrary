@@ -53,8 +53,6 @@ namespace os {
              */
             void setStatus(bool newStatus);
 
-            virtual std::string getDeviceInfo() const = 0;
-
             /**
              * @brief Seting compare operator
              */

@@ -15,10 +15,6 @@ namespace os {
         }
         brightness = level;
         return true;
-    }
-
-    std::string Light::getDeviceInfo() const {
-    return Actuator::getDeviceInfo() + " | Brightness: " + std::to_string(brightness) + "%";
-    }   
+    }  
     
 } // namespace os

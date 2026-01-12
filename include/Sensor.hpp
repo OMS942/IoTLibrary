@@ -1,6 +1,7 @@
 #pragma once
 #include "Device.hpp"
 #include "Environment.hpp"
+#include <cmath>
 
 namespace os {
     /**
@@ -23,7 +24,7 @@ namespace os {
              */
             bool updateValue(T newValue) {
                 if ((newValue >= minVal || !hasMin) && (newValue<= maxVal || !hasMax)) {
-                    value = newValue;
+                    value = std::round(newValue * 100.0f) / 100.0f;
                     return true;
                 } 
                 return false;
@@ -57,10 +58,6 @@ namespace os {
              * @brief Returns true if read succesfully
              */
             virtual bool read(const Environment& env) = 0;
-
-            std::string getDeviceInfo() const override {
-                return Device::getDeviceInfo() + " | Current Value: " + std::to_string(value) + unit;
-            }
 
     };
 

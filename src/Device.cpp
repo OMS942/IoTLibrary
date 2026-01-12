@@ -30,8 +30,4 @@ namespace os {
         return this->id == other.id;
     }
 
-    std::string Device::getDeviceInfo() const {
-        return "ID: " + std::to_string(id) + " | Name: " + name + " | Status: " + (status ? "ON" : "OFF");
-    }
-
 }
