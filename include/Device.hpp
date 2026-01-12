@@ -39,9 +39,19 @@ namespace os {
             int getId() const;
 
             /**
+             * @brief Sets device ID
+             */
+            void setId(int newID);
+
+            /**
              * @brief Returns device name
              */
-            const std::string getName() const;
+            const std::string& getName() const;
+
+            /**
+             * @brief Sets device name
+             */
+            void setName(std::string name);
             
             /**
              * @brief Returns device status

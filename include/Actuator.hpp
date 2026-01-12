@@ -4,14 +4,16 @@
 
 namespace os
 {
-    class Actuator : public Device {
+    class Actuator : public virtual Device {
         private:
             int power;
             std::chrono::steady_clock::time_point offTime;
             bool hasTimeout;
 
         public:
-            Actuator(int id, const std::string& name) : Device(id, name), power(0), hasTimeout(false) {}
+            Actuator();
+
+            Actuator(int id, const std::string& name);
 
             /**
              * @brief Turns on device

@@ -1,6 +1,10 @@
 #include "Actuator.hpp"
 
 namespace os {
+    Actuator::Actuator() : Device(), power(0), hasTimeout(false) {}
+
+    Actuator::Actuator(int id, const std::string& name) : Device(id, name), power(0), hasTimeout(false) {}
+
     void Actuator::turnOn(int powerLevel, int durationSeconds){
         if (powerLevel < 0 || powerLevel > 100) {
             throw std::out_of_range("Power must be in range 0-100!");
@@ -44,11 +48,10 @@ namespace os {
 
     bool Actuator::setPower(int powerLevel) {
         if (powerLevel < 0 || powerLevel > 100) {
+            throw std::out_of_range("Power must be in range 0-100!");      
+        } else {
             power = powerLevel;
             return true;
-        } else {
-            throw std::out_of_range("Power must be in range 0-100!");
-            return false;
         }
     }
 

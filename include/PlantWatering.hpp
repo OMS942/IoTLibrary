@@ -1,42 +1,41 @@
 #pragma once
-#include "Actuator.hpp" 
+#include "Actuator.hpp"
+#include "Sensor.hpp"
 #include "Environment.hpp"
 
 namespace os
 {
-    class HeaterActuator : public Actuator {
+    class PlantWatering : public Sensor<float>, public Actuator {
         public:
-            HeaterActuator();
+            PlantWatering(int deviceID, int deviceSensorID, int deviceActuatorID);
 
-            HeaterActuator(int id, const std::string& name);
-
+            bool read(const Environment& env) override;
+            
             /**
-             * @brief Turns on heating
-             * @brief Applies a safety limit of 80% on requested power output.
-             * @param powerLevel Power level of the heater (0-100), default 100
+             * @brief Turns on pump
+             * @param powerLevel Power level of the pump (0-100), default 100
              * @param durationSeconds Duration in seconds, defaul 0
              */
             void turnOn(int powerLevel = 100, int durationSeconds = 0) override;
 
             /**
-             * @brief Turns off heating
+             * @brief Turns off pmup
              */
             void turnOff() override;
             
             /**
-             * @brief Toggles heating
+             * @brief Toggles pump
              */
             void toggle() override; 
 
             /**
-             * @brief Simulate heating in environment
-             * @param env Environment for heating 
+             * @brief Simulate environment
+             * @param env Environment 
              * @param dt Time step in seconds
              */
             void update(Environment& env, float dt);
 
+            
+
     };
 } // namespace os
-
-
-

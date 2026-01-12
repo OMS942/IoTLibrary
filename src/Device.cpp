@@ -14,8 +14,19 @@ namespace os {
         return id;
     }
 
-    const std::string Device::getName() const {
+    void Device::setId(int newID) {
+        if (id < 0) {
+            throw std::invalid_argument("ID cannot be negative!");
+        }
+        id = newID;
+    }
+
+    const std::string& Device::getName() const {
         return name;
+    }
+
+    void Device::setName(std::string newName) {
+        name = newName;
     }
 
     bool Device::getStatus() const {

@@ -3,9 +3,15 @@
 
 namespace os
 {
+    HeaterActuator::HeaterActuator() : Actuator() {}
+
+    HeaterActuator::HeaterActuator(int id, const std::string& name) : Actuator(id, name) {}
+
     void HeaterActuator::turnOn(int powerLevel, int durationSeconds) {
-        /// Safty power limiter
-        if (powerLevel > 80) powerLevel = 80;
+        Actuator::turnOn(powerLevel, durationSeconds);
+        if (powerLevel > 80) {
+            powerLevel = 80;
+        }
         Actuator::turnOn(powerLevel, durationSeconds);
     }
 

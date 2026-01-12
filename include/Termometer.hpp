@@ -4,8 +4,8 @@
 namespace os {
     class Termometer : public Sensor<float> {
         public: 
-            Termometer(int id, const std::string& name, const std::string& unit)
-                : Sensor(id, name, "C", -273.0f, 500.0f) {}
+            Termometer();
+            Termometer(int id, const std::string& name, const std::string& unit, float minValue, float maxValue);
 
             /**
              * @brief Reads temperature

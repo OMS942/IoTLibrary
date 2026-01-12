@@ -8,7 +8,7 @@ namespace os {
      * @brief Template class for senors
      */
     template <typename T>
-    class Sensor : public Device {
+    class Sensor : public virtual Device {
         protected:
             T value;
             T minVal;
@@ -31,6 +31,7 @@ namespace os {
             }
 
         public:
+            Sensor() : Device(), value(0), unit(""), hasMin(false), hasMax(false) {}
             /**
              * @brief Parametrized constructors
              */
@@ -50,7 +51,7 @@ namespace os {
             /**
              * @brief Returns sensor unit
              */
-            std::string getUnit() const {
+            const std::string& getUnit() const {
                 return unit;
             }
 
