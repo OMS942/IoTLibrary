@@ -9,9 +9,9 @@ namespace os
 
     void HeaterActuator::turnOn(int powerLevel, float durationSeconds) {
         Actuator::turnOn(powerLevel, durationSeconds);
-        //safety mechanism
+        //example of safety mechanism
         if (powerLevel > 80) {
-            m_power = 80;
+            powerLevel = 80;
         }
     }
 

@@ -3,21 +3,22 @@
 
 namespace os
 {
-    Environment::Environment() : m_temperature(0), m_ambientTemp(0) {}
+    Environment::Environment() : m_temperature(0) {}
 
-    Environment::Environment(float start, float ambient)
-        : m_temperature(start), m_ambientTemp(ambient) {}
+    Environment::Environment(float startTemp) {
+        if (startTemp < -273.15f) {
+            throw std::invalid_argument("Temperature below absolute zero (C)");
+        }
+        m_temperature = startTemp;
+    }
 
     void Environment::applyHeating(int power, float dt) {
         m_temperature += 0.01f * power * dt;
     }
 
     void Environment::applyCooling(float dt) {
-        if (m_temperature > m_ambientTemp) {
+        if (m_temperature > -273.15f) {
             m_temperature -= 0.5f * dt;
-        }
-        if (m_temperature < m_ambientTemp) {
-            m_temperature = m_ambientTemp;
         }
     }
 
@@ -26,9 +27,10 @@ namespace os
     }
 
     void Environment::setTemperature(float temp) {
-        if (temp > -273) {
-        m_temperature = temp;
+        if (temp < -273.15f) {
+            throw std::invalid_argument("Temperature below absolute zero (C)");
         }
+        m_temperature = temp;
     }
 
 } // namespace os

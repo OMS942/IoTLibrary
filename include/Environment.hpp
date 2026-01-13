@@ -9,13 +9,15 @@ namespace os
     class Environment {
     private:
         float m_temperature;
-        float m_ambientTemp;
-
 
     public:
         Environment();    
 
-        Environment(float start, float ambient);
+        /**
+         * @brief Parametric constructor
+         * @throw std::invalid_argument if temp below absolute zero
+         */
+        Environment(float startTemp);
 
         /**
          * @brief Apply heating to the environment
@@ -25,7 +27,7 @@ namespace os
         void applyHeating(int power, float dt);
 
         /**
-         * @brief Simulate the environment cooling to ambient temperature
+         * @brief Simulate the environment cooling to absolute zero
          * @param dt Time step in seconds
          */
         void applyCooling(float dt);
@@ -38,6 +40,7 @@ namespace os
 
         /**
          * @brief Sets current temperature
+         * @throw std::invalid_argument if temp below absolute zero
          */
         void setTemperature(float temp);
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Device.hpp"
 #include "Environment.hpp"
 #include <cmath>
@@ -23,11 +24,17 @@ namespace os {
              * @return true if value is in range
              */
             bool updateValue(T newValue) {
-                if ((newValue >= minVal || !hasMin) && (newValue<= maxVal || !hasMax)) {
-                    value = static_cast<T>(std::round(newValue * 100) / 100);
+                bool ok = true;
+
+                if (hasMin && newValue < minVal) ok = false;
+                if (hasMax && newValue > maxVal) ok = false;
+
+                if (ok) {
+                    value = newValue;
                     return true;
-                } 
+                }
                 return false;
+
             }
 
         public:

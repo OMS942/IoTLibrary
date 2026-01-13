@@ -22,12 +22,12 @@ int main() {
 
         // --- Initial conditions ---
         float targetTemperature = 22.0f;
-        float ambientTemperature = 18.0f;
         float initialTemperature = 24.0f;
 
         // --- Create environment ---
-        os::Environment room(initialTemperature, ambientTemperature);
+        os::Environment room(initialTemperature);
 
+        // --- Create schedule ---
         os::Schedule schedule;
 
         // --- Create devices ---
@@ -37,13 +37,15 @@ int main() {
         std::cout << "Initial state:\n";
         std::cout << "Temperature: " << room.getTemperature() << " C\n\n";
         
+        // --- Create room and add devices---
         os::Room livingRoom("Living room");
         livingRoom += &heater;
         livingRoom += &tempSensor;
 
         // Schedule turning on pump in first second
         schedule.addEvent({1.0f, &heater, true, 100, 5});
-        // Schedule turning of pump in third second
+
+        // Schedule turning off pump in third second
         schedule.addEvent({3.0f, &heater, false, 0, 0});
 
         std::cout << "Turning ON all devices via Room...\n";
@@ -83,7 +85,7 @@ int main() {
         // --- Start normal operation ---
         std::cout << "Starting simulation loop...\n\n";
 
-        heater.turnOn(70); // safe value
+        heater.turnOn(70);
 
         auto last = std::chrono::steady_clock::now();
 
@@ -105,7 +107,7 @@ int main() {
             // --- Read sensors ---
             tempSensor.read(room);
 
-            if (elapsed > 5) {
+            if (elapsed > 5) { // 5 seconds to demnostrate schedule
                 // --- Temperature control ---
                 if ((tempSensor.getValue() > targetTemperature + 0.5f) && heater.getStatus()) {
                     heater.turnOff();
