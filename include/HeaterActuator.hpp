@@ -16,7 +16,7 @@ namespace os
              * @param powerLevel Power level of the heater (0-100), default 100
              * @param durationSeconds Duration in seconds, defaul 0
              */
-            void turnOn(int powerLevel = 100, int durationSeconds = 0) override;
+            void turnOn(int powerLevel = 100, float durationSeconds = 0) override;
 
             /**
              * @brief Turns off heating

@@ -1,15 +1,11 @@
 #include "Room.hpp"
 
 namespace os {
-    Room::Room(std::string name) : roomName(name) {}
-
-    Room::~Room() {
-        for (auto d : devices) delete d;
-    }
+    Room::Room(const std::string& name) : m_roomName(name) {}
 
     Room& Room::operator+=(Device* newDevice) {
         if (newDevice != nullptr) {
-            devices.push_back(newDevice);
+            m_devices.push_back(newDevice);
         }
         return *this;
     }
@@ -19,10 +15,10 @@ namespace os {
             throw std::invalid_argument("Attempting to remove non-existing device (nullptr)!");
         }
 
-        auto it = std::find(devices.begin(), devices.end(), deviceToRemove);
+        auto it = std::find(m_devices.begin(), m_devices.end(), deviceToRemove);
 
-        if (it != devices.end()) {
-            devices.erase(it);
+        if (it != m_devices.end()) {
+            m_devices.erase(it);
         } else {
             throw std::runtime_error("Error: Device '" + deviceToRemove->getName() + "' is not in this room!");
         }
@@ -30,22 +26,20 @@ namespace os {
         return *this;
     }
 
+    void Room::turnOnAll() {
+        for (auto d : m_devices) {
+            d->setStatus(true);
+        }
+    }
+
     void Room::shutdownAll() {
-        for (auto d : devices) {
+        for (auto d : m_devices) {
             d->setStatus(false);
         }
     }
 
-    /*
-
-    std::string Room::showStatus() const {
-        std::string report = "Room status: " + roomName + "\n";
-        for (auto d : devices) {
-           report += d->getDeviceInfo() + "\n";
-        }
-        return report;
+    const std::vector<Device*>& Room::getDevices() const {
+        return m_devices;
     }
-
-    */
 
 } // namespace os

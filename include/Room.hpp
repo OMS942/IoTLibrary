@@ -10,13 +10,11 @@ namespace os {
      */
     class Room {
         private:
-            std::string roomName;
-            std::vector<Device*> devices;
+            std::string m_roomName;
+            std::vector<Device*> m_devices;
 
         public:
-            Room(std::string name);
-
-            ~Room();
+            Room(const std::string& name);
 
             /**
              * @brief Operator for adding devices to room.
@@ -29,14 +27,19 @@ namespace os {
             Room& operator-=(Device* newDevice);
 
             /**
+             * @brief Turn on all devices in room
+             */
+            void turnOnAll();
+
+            /**
              * @brief Turn off all devices in room
              */
             void shutdownAll();
 
             /**
-             * @brief Shows status of all devices in room.
+             * @brief Get all devices (raw pointers)
              */
-            std::string showStatus() const;
+            const std::vector<Device*>& getDevices() const;
 
     };
 

@@ -8,14 +8,14 @@ namespace os
 {
     class Environment {
     private:
-        float temperature;
-        float ambientTemp;
-        float soilMoisture;
+        float m_temperature;
+        float m_ambientTemp;
+
 
     public:
         Environment();    
 
-        Environment(float start, float ambient, float initMoisture);
+        Environment(float start, float ambient);
 
         /**
          * @brief Apply heating to the environment
@@ -31,17 +31,6 @@ namespace os
         void applyCooling(float dt);
 
         /**
-         * @brief Simulate watering
-         */
-        void applyWatering(int power, float dt);
-
-        /**
-         * @brief Simulate drying of soil
-         * @param dt Time step in seconds
-         */
-        void applyDrying(float dt);
-
-        /**
          * @brief Get current temperature
          * @return Temperature in Celsius
          */
@@ -51,18 +40,6 @@ namespace os
          * @brief Sets current temperature
          */
         void setTemperature(float temp);
-
-        /**
-         * @brief Get current soil moisture
-         * @return soil moisture 
-         */
-        float getSoilMoisture() const;
-
-        /**
-         * @brief Sets current soil moisture
-         */
-        void setSoilMoisture(float moisture);
-
 
     };
 } // namespace os

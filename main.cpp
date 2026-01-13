@@ -12,7 +12,9 @@
 #include "Environment.hpp"
 #include "HeaterActuator.hpp"
 #include "Termometer.hpp"
-#include "PlantWatering.hpp"
+#include "Room.hpp"
+#include "Schedule.hpp"
+
 
 int main() {
     try {
@@ -21,23 +23,52 @@ int main() {
         // --- Initial conditions ---
         float targetTemperature = 22.0f;
         float ambientTemperature = 18.0f;
-        float initialTemperature = 20.0f;
-        float initialMoisture = 50.0f;
-
-        float minMoisture = 20.0f;
-        float maxMoisture = 80.0f;
+        float initialTemperature = 24.0f;
 
         // --- Create environment ---
-        os::Environment room(initialTemperature, ambientTemperature, initialMoisture);
+        os::Environment room(initialTemperature, ambientTemperature);
+
+        os::Schedule schedule;
 
         // --- Create devices ---
         os::HeaterActuator heater(1, "Main heater");
         os::Termometer tempSensor(2, "Room thermometer", "C", -50.0f, 100.0f);
-        os::PlantWatering plant(3, 4, 5); // pump id, sensor id, device id (as you designed)
 
         std::cout << "Initial state:\n";
-        std::cout << "Temperature: " << room.getTemperature() << " C\n";
-        std::cout << "Soil moisture: " << room.getSoilMoisture() << " %\n\n";
+        std::cout << "Temperature: " << room.getTemperature() << " C\n\n";
+        
+        os::Room livingRoom("Living room");
+        livingRoom += &heater;
+        livingRoom += &tempSensor;
+
+        // Schedule turning on pump in first second
+        schedule.addEvent({1.0f, &heater, true, 100, 5});
+        // Schedule turning of pump in third second
+        schedule.addEvent({3.0f, &heater, false, 0, 0});
+
+        std::cout << "Turning ON all devices via Room...\n";
+        livingRoom.turnOnAll();
+        std::cout << "Heater status: " << (heater.getStatus() ? "ON" : "OFF") << "\n\n";
+
+        std::cout << "Turning OFF all devices via Room...\n";
+        livingRoom.shutdownAll();
+        std::cout << "Heater status: " << (heater.getStatus() ? "ON" : "OFF") << "\n\n";
+
+        std::cout << "--- Room device list (initial) ---\n";
+        for (auto d : livingRoom.getDevices()) {
+            std::cout << " * " << d->getName() << " [ID=" << d->getId() << "]\n";
+        }
+        std::cout << "\n";
+
+        // Remove the thermometer
+        std::cout << "\nRemoving thermometer using -= ...\n";
+        livingRoom -= &tempSensor;
+
+        std::cout << "--- Room device list (after removal) ---\n";
+        for (auto d : livingRoom.getDevices()) {
+            std::cout << " * " << d->getName() << " [ID=" << d->getId() << "]\n";
+        }
+        std::cout << "\n";
 
         // --- Exception demo ---
         std::cout << "Testing exception handling:\n";
@@ -67,31 +98,23 @@ int main() {
 
             // --- Update world ---
             heater.update(room, dt);
-            plant.update(room, dt);
+            schedule.update(elapsed);
 
             room.applyCooling(dt);
-            room.applyDrying(dt);
 
             // --- Read sensors ---
             tempSensor.read(room);
-            plant.read(room);
 
-            // --- Temperature control ---
-            if (tempSensor.getValue() > targetTemperature + 0.5f) {
-                heater.turnOff();
+            if (elapsed > 5) {
+                // --- Temperature control ---
+                if ((tempSensor.getValue() > targetTemperature + 0.5f) && heater.getStatus()) {
+                    heater.turnOff();
+                }
+                else if ((tempSensor.getValue() < targetTemperature - 0.5f) && !heater.getStatus()) {
+                    heater.turnOn(70);
+                }
             }
-            else if (tempSensor.getValue() < targetTemperature - 0.5f) {
-                heater.turnOn(70);
-            }
-
-            // --- Watering control ---
-            if (plant.getValue() > maxMoisture) {
-                plant.turnOff();
-            }
-            else if (plant.getValue() < minMoisture) {
-                plant.turnOn(100, 5); // water for 5 seconds
-            }
-
+            
             // --- Print status ---
             std::cout << std::fixed << std::setprecision(2);
             std::cout
@@ -99,8 +122,6 @@ int main() {
                 << "Temp: " << tempSensor.getValue() << " " << tempSensor.getUnit() << " | "
                 << "Heater: " << (heater.getStatus() ? "ON" : "OFF")
                 << " (" << heater.getPower() << "%) | "
-                << "Soil: " << plant.getValue() << " " << plant.getUnit() << " | "
-                << "Watering: " << (plant.getStatus() ? "ON" : "OFF")
                 << "\n";
 
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));

@@ -10,9 +10,9 @@ namespace os {
      */
     class Device {
         private:
-            int id;
-            std::string name;
-            bool status;
+            int m_id;
+            std::string m_name;
+            bool m_status;
 
         public:
             /**

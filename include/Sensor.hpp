@@ -8,7 +8,7 @@ namespace os {
      * @brief Template class for senors
      */
     template <typename T>
-    class Sensor : public virtual Device {
+    class Sensor : public Device {
         protected:
             T value;
             T minVal;
@@ -24,7 +24,7 @@ namespace os {
              */
             bool updateValue(T newValue) {
                 if ((newValue >= minVal || !hasMin) && (newValue<= maxVal || !hasMax)) {
-                    value = std::round(newValue * 100.0f) / 100.0f;
+                    value = static_cast<T>(std::round(newValue * 100) / 100);
                     return true;
                 } 
                 return false;

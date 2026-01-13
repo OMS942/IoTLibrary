@@ -1,28 +1,24 @@
 #include "Actuator.hpp"
 
 namespace os {
-    Actuator::Actuator() : Device(), power(0), hasTimeout(false) {}
+    Actuator::Actuator() : Device(), m_power(0), m_hasTimeout(false) {}
 
-    Actuator::Actuator(int id, const std::string& name) : Device(id, name), power(0), hasTimeout(false) {}
+    Actuator::Actuator(int id, const std::string& name) : Device(id, name), m_power(0), m_hasTimeout(false) {}
 
-    void Actuator::turnOn(int powerLevel, int durationSeconds){
+    void Actuator::turnOn(int powerLevel, float durationSeconds){
         if (powerLevel < 0 || powerLevel > 100) {
             throw std::out_of_range("Power must be in range 0-100!");
         } 
-        power = powerLevel;
-        setStatus(power > 0);
+        m_power = powerLevel;
+        setStatus(m_power > 0);
 
-        if (durationSeconds > 0) {
-            hasTimeout = true;
-            offTime = std::chrono::steady_clock::now() + std::chrono::seconds(durationSeconds);
-        } else {
-            hasTimeout = false;
-        }
+        m_remainingTime = durationSeconds;
+        m_hasTimeout = durationSeconds > 0;
     }
 
     void Actuator::turnOff() {
-        power = 0;
-        hasTimeout = false;
+        m_power = 0;
+        m_hasTimeout = false;
         setStatus(false);
     }
 
@@ -34,23 +30,24 @@ namespace os {
         }
     }
 
-     void Actuator::update() {
-        if (hasTimeout && getStatus()) {
-            if (std::chrono::steady_clock::now() >= offTime) {
+     void Actuator::update(float dt) {
+        if (m_hasTimeout && getStatus()) {
+            m_remainingTime -= dt;
+            if (m_remainingTime <= 0.0f) {
                 turnOff();
             }
         }
     }
 
     int Actuator::getPower() const {
-        return power;
+        return m_power;
     }
 
     bool Actuator::setPower(int powerLevel) {
         if (powerLevel < 0 || powerLevel > 100) {
             throw std::out_of_range("Power must be in range 0-100!");      
         } else {
-            power = powerLevel;
+            m_power = powerLevel;
             return true;
         }
     }

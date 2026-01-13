@@ -7,12 +7,12 @@ namespace os
 
     HeaterActuator::HeaterActuator(int id, const std::string& name) : Actuator(id, name) {}
 
-    void HeaterActuator::turnOn(int powerLevel, int durationSeconds) {
+    void HeaterActuator::turnOn(int powerLevel, float durationSeconds) {
         Actuator::turnOn(powerLevel, durationSeconds);
+        //safety mechanism
         if (powerLevel > 80) {
-            powerLevel = 80;
+            m_power = 80;
         }
-        Actuator::turnOn(powerLevel, durationSeconds);
     }
 
     void HeaterActuator::turnOff() { 
@@ -24,9 +24,9 @@ namespace os
     }
 
     void HeaterActuator::update(Environment& env, float dt) {
-        Actuator::update();
+        Actuator::update(dt);
         if (getStatus()) {
-            env.applyHeating(getPower(), dt);
+            env.applyHeating(m_power, dt);
         }
     }
 } // namespace os

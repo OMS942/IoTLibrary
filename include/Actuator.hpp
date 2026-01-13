@@ -4,11 +4,11 @@
 
 namespace os
 {
-    class Actuator : public virtual Device {
-        private:
-            int power;
-            std::chrono::steady_clock::time_point offTime;
-            bool hasTimeout;
+    class Actuator : public Device {
+        protected:
+            int m_power;
+            float m_remainingTime;
+            bool m_hasTimeout;
 
         public:
             Actuator();
@@ -19,7 +19,7 @@ namespace os
              * @brief Turns on device
              * @param powerLevel 0-100[%]
              */
-            virtual void turnOn(int powerLevel = 100, int durationSeconds = 0);
+            virtual void turnOn(int powerLevel = 100, float durationSeconds = 0);
 
             /**
              * @brief Turns off device
@@ -34,7 +34,7 @@ namespace os
             /**
              * @brief Updates devices parameters
              */
-            virtual void update();
+            virtual void update(float dt);
 
             /**
              * @brief Gets device power
