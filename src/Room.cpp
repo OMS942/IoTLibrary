@@ -1,6 +1,8 @@
 #include "Room.hpp"
 
 namespace os {
+    Room::Room() : m_roomName("Unknown") {}
+
     Room::Room(const std::string& name) : m_roomName(name) {}
 
     Room& Room::operator+=(Device* newDevice) {

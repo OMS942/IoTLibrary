@@ -42,6 +42,7 @@ namespace os
         void setTemperature(float temp);
 
     };
+    
 } // namespace os
 
 

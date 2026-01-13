@@ -1,9 +1,9 @@
 #include "Actuator.hpp"
 
 namespace os {
-    Actuator::Actuator() : Device(), m_power(0), m_hasTimeout(false) {}
+    Actuator::Actuator() : Device(), m_power(0), m_hasTimeout(false), m_remainingTime(0.0f) {}
 
-    Actuator::Actuator(int id, const std::string& name) : Device(id, name), m_power(0), m_hasTimeout(false) {}
+    Actuator::Actuator(int id, const std::string& name) : Device(id, name), m_power(0), m_remainingTime(0.0f), m_hasTimeout(false) {}
 
     void Actuator::turnOn(int powerLevel, float durationSeconds){
         if (powerLevel < 0 || powerLevel > 100) {

@@ -14,6 +14,8 @@ namespace os {
             std::vector<Device*> m_devices;
 
         public:
+            Room();
+    
             Room(const std::string& name);
 
             /**

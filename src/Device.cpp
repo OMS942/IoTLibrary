@@ -3,7 +3,7 @@
 namespace os {
     Device::Device() : m_id(0), m_name("Unknown"), m_status(false) {}
 
-    Device::Device(int id, std::string name) {
+    Device::Device(int id, std::string name) : m_status(false) {
         if (id < 0) {
             throw std::invalid_argument("ID can't be negative!");
         }
